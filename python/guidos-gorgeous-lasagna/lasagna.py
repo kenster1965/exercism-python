@@ -35,7 +35,7 @@ def preparation_time_in_minutes(number_of_layers):
     """
     return number_of_layers * PREPARATION_TIME
 
-def lapsed_time_in_minutes(number_of_layers, elapsed_bake_time):
+def elapsed_time_in_minutes(number_of_layers, elapsed_bake_time):
     """Calculate the elapsed cooking time.
 
     :param number_of_layers: int - the number of layers in the lasagna.
