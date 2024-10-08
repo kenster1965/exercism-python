@@ -70,7 +70,6 @@ def fail_safe(temperature, neutrons_produced_per_second, threshold):
     3. 'DANGER' -> `temperature * neutrons per second` is not in the above-stated ranges
     """
     thermal_neutrons = temperature * neutrons_produced_per_second
-    status_value = (thermal_neutron / threshold) * 100
 
     if thermal_neutrons < 0.9 * threshold:
         return 'LOW'
