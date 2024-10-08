@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "exercism-python"
+version = "0.1.0"
+description = ""
+authors = ["Warren Moore <warren.moore@ookla.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+flake8 = "^7.1.1"
+ipython = "^8.28.0"
+ipdb = "^0.13.13"
+pytest = "^8.3.3"
+coverage = "^7.6.1"
+pytest-cache = "^1.0"
+pytest-subtests = "^0.13.1"
+pytest-pylint = "^0.21.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
