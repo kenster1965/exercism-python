@@ -55,8 +55,7 @@ def get_leftover_of_bills(amount, denomination):
     :param denomination: int - the value of a single bill.
     :return: float - the amount that is "leftover", given the current denomination.
     """
-
-    pass
+    return amount % denomination if denomination > 0 else 0
 
 
 def exchangeable_value(budget, exchange_rate, spread, denomination):
@@ -68,5 +67,8 @@ def exchangeable_value(budget, exchange_rate, spread, denomination):
     :param denomination: int - the value of a single bill.
     :return: int - maximum value you can get.
     """
-
-    pass
+    exchange_fee = exchange_rate * spread / 100
+    updated_exchange_rate = exchange_fee + exchange_rate
+    exchanged_value = exchange_money(budget, updated_exchange_rate)
+    number_of_bills = get_number_of_bills(exchanged_value, denomination)
+    return get_value_of_bills(denomination, number_of_bills)
