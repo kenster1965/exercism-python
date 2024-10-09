@@ -72,9 +72,7 @@ def is_blackjack(card_one, card_two):
     have_ace = card_one in ace_card or card_two in ace_card
     have_face_card = card_one in face_cards or card_two in face_cards
 
-    if have_ace and have_face_card:
-        return True
-    return False
+    return have_ace and have_face_card
 
 
 def can_split_pairs(card_one, card_two):
@@ -83,9 +81,7 @@ def can_split_pairs(card_one, card_two):
     :param card_one, card_two: str - cards dealt.
     :return: bool - can the hand be split into two pairs? (i.e. cards are of the same value).
     """
-
-    pass
-
+    return value_of_card(card_one) == value_of_card(card_two)
 
 def can_double_down(card_one, card_two):
     """Determine if a blackjack player can place a double down bet.
@@ -93,5 +89,6 @@ def can_double_down(card_one, card_two):
     :param card_one, card_two: str - first and second cards in hand.
     :return: bool - can the hand can be doubled down? (i.e. totals 9, 10 or 11 points).
     """
+    total_value = value_of_card(card_one) + value_of_card(card_two)
+    return 9 <= total_value <= 11
 
-    pass
