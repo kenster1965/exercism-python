@@ -25,8 +25,8 @@ def make_word_groups(vocab_words):
     produces the following string: 'en :: enclose :: enjoy :: enlighten'.
     """
     prefix = vocab_words[0]
-    for a in range (1, len(vocab_words)):
-        vocab_words[a] = prefix + vocab_words[a]
+    for number in range (1, len(vocab_words)):
+        vocab_words[number] = prefix + vocab_words[number]
     return " :: ".join(vocab_words)
 
 
