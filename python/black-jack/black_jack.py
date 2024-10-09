@@ -15,9 +15,9 @@ def value_of_card(card):
     2.  'A' (ace card) = 1
     3.  '2' - '10' = numerical value.
     """
-    if card in ['J', 'Q', 'K']:
+    if card in ["J", "Q", "K"]:
         return 10
-    if card == 'A':
+    if card == "A":
         return 1
     return int(card)
 
@@ -49,7 +49,7 @@ def value_of_ace(card_one, card_two):
     2.  'A' (ace card) = 11 (if already in hand)
     3.  '2' - '10' = numerical value.
     """
-    if card_one == 'A' or card_two == 'A':
+    if card_one == "A" or card_two == "A":
         return 1
     if value_of_card(card_one) + value_of_card(card_two) > 10:
         return 1
@@ -66,8 +66,22 @@ def is_blackjack(card_one, card_two):
     2.  'A' (ace card) = 11 (if already in hand)
     3.  '2' - '10' = numerical value.
     """
+    have_ace = False
+    have_face_card = False
 
-    pass
+    if card_one == "A" or card_two == "A":
+        have_ace = True
+
+    if card_one in ["10", "J", "Q", "K"]:
+        print(f"card_one: {card_one}")
+        have_face_card = True
+    if card_two in ["10", "J", "Q", "K"]:
+        have_face_card = True
+        print(f"card_two: {card_two}")
+
+    if have_ace and have_face_card:
+        return True
+    return False
 
 
 def can_split_pairs(card_one, card_two):
