@@ -10,7 +10,7 @@ def get_rounds(number):
     :param number: int - current round number.
     :return: list - current round and the two that follow.
     """
-    return [number + i for i in range(3)]
+    return [number + index for index in range(3)]
 
 
 def concatenate_rounds(rounds_1, rounds_2):
