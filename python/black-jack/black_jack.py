@@ -66,18 +66,11 @@ def is_blackjack(card_one, card_two):
     2.  'A' (ace card) = 11 (if already in hand)
     3.  '2' - '10' = numerical value.
     """
-    have_ace = False
-    have_face_card = False
+    ace_card = {'A'}
+    face_cards = {'10', 'J', 'Q', 'K'}
 
-    if card_one == "A" or card_two == "A":
-        have_ace = True
-
-    if card_one in ["10", "J", "Q", "K"]:
-        print(f"card_one: {card_one}")
-        have_face_card = True
-    if card_two in ["10", "J", "Q", "K"]:
-        have_face_card = True
-        print(f"card_two: {card_two}")
+    have_ace = card_one in ace_card or card_two in ace_card
+    have_face_card = card_one in face_cards or card_two in face_cards
 
     if have_ace and have_face_card:
         return True
