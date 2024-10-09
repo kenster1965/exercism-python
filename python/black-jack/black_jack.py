@@ -66,8 +66,8 @@ def is_blackjack(card_one, card_two):
     2.  'A' (ace card) = 11 (if already in hand)
     3.  '2' - '10' = numerical value.
     """
-    ace_card = {'A'}
-    face_cards = {'10', 'J', 'Q', 'K'}
+    ace_card = {"A"}
+    face_cards = {"10", "J", "Q", "K"}
 
     have_ace = card_one in ace_card or card_two in ace_card
     have_face_card = card_one in face_cards or card_two in face_cards
@@ -91,4 +91,3 @@ def can_double_down(card_one, card_two):
     """
     total_value = value_of_card(card_one) + value_of_card(card_two)
     return 9 <= total_value <= 11
-
