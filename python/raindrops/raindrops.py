@@ -14,4 +14,6 @@ def convert(number):
         raindrop_sounds += "Plang"
     if number % 7 == 0:
         raindrop_sounds += "Plong"
-    return raindrop_sounds or str(number)
+    if raindrop_sounds:
+        return raindrop_sounds
+    return str(number)
