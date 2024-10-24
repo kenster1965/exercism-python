@@ -8,7 +8,7 @@ RESISTOR_COLORS = (
     'green', 'blue', 'violet', 'grey', 'white'
 )
 RESISTOR_PREFIX = (
-    'ohms', 'kiloohms', 'megaohms', 'gigaohms'
+    '', 'kilo', 'mega', 'giga'
 )
 
 def label(colors):
@@ -19,41 +19,103 @@ def label(colors):
     """
     #print(f"{colors=}")
 
-    print(f"{colors[2]}  {RESISTOR_COLORS.index(colors[2].lower())}")
+    # find full number first
 
-    number_zeros = int(RESISTOR_COLORS.index(colors[2].lower()))
-    print(f"{number_zeros=}")
-
-    #print(f"{RESISTOR_COLORS.index(colors[2].lower())=}")
-
-    print(f"{int(RESISTOR_COLORS.index(colors[2].lower()) / 3) % 3=}")
-
-    print(f"{int(RESISTOR_COLORS.index(colors[2].lower()) / 3)=}")
-
-    print(f"{''.join(str(RESISTOR_COLORS.index(color.lower())) for color in colors[:2])=}")
-
-    print(f"{RESISTOR_PREFIX[int(RESISTOR_COLORS.index(colors[2].lower()) / 3)]=}")
+    if not all(color.lower() in RESISTOR_COLORS for color in colors[:3]):
+        raise ValueError("Invalid color(s) in the resistor bands.")
 
     resistance = int(''.join(str(RESISTOR_COLORS.index(color.lower())) for color in colors[:2]))
+    print(f"resistance first 2 bands: {resistance}")
 
-    print(f"{resistance=}")
+    third_band = int(RESISTOR_COLORS.index(colors[2].lower()))
+    resistance *= 10 ** third_band
+    print(f"Full resistance: {resistance}")
 
-    prefix = RESISTOR_PREFIX[int(RESISTOR_COLORS.index(colors[2].lower()) / 3)]
+    for i, prefix in enumerate(RESISTOR_PREFIX):
+        print(f"{i=} {prefix=} {resistance=}")
+        if resistance < 1000:
+            print(f"** {resistance} {prefix}ohms")
+            return f"{resistance} {prefix}ohms"
+        resistance //= 1000
+        print(f" * > {resistance}")
 
-    print(f"{prefix=}")
+    print(f"** {resistance} {RESISTOR_PREFIX[-1]}ohms")
+    return f"{resistance} {RESISTOR_PREFIX[-1]}ohms"
 
-    print(f"{resistance} {prefix}")
+    # full_number = resistance * 10 ** number_zeros
+    # print(f"{full_number=}")
+
+    # if full_number >= 1e9:
+    #     print(f"{int(full_number / 1e9)} gigaohms")
+    # elif full_number >= 1e6:
+    #     print( f"{int(full_number / 1e6)} megaohms")
+    # elif full_number >= 1e3:
+    #     print( f"{int(full_number / 1e3)} kiloohms")
+    # else:
+    #     print( f"{full_number} ohms")
 
 
 
 
+    # return 1
+    # return f"{resistance} {RESISTOR_PREFIX[findprefix]}"
 
-    if all(color.lower() in RESISTOR_COLORS for color in colors[:3]):
-        resistance = int(''.join(str(RESISTOR_COLORS.index(color.lower())) for color in colors[:2]))
 
-        #resistance *= 10 ** RESISTOR_COLORS.index(colors[2].lower())
-        prefix = RESISTOR_PREFIX[int(RESISTOR_COLORS.index(colors[2].lower()) / 3)]
-        return f"{resistance} {prefix}"
 
-    raise ValueError("Invalid color(s) in the resistor bands.")
+    # print(f"{colors[2]}  {RESISTOR_COLORS.index(colors[2].lower())}")
+
+    # findprefix = int(number_zeros / 3)
+    # print(f"{findprefix=}  : {RESISTOR_PREFIX[findprefix]}")
+
+    # add_zeros = number_zeros % 3
+    # print(f"{add_zeros=}")
+
+
+
+    # resistance *= 10 ** add_zeros
+    # #resistance *= 10 ** RESISTOR_COLORS.index(colors[2].lower())
+    # print(f"New resistance: {resistance}")
+
+
+    # #print(f"{RESISTOR_COLORS.index(colors[2].lower())=}")
+
+    # print(f"{int(RESISTOR_COLORS.index(colors[2].lower()) / 3) % 3=}")
+
+    # print(f"{int(RESISTOR_COLORS.index(colors[2].lower()) / 3)=}")
+
+    # print(f"{''.join(str(RESISTOR_COLORS.index(color.lower())) for color in colors[:2])=}")
+
+
+
+    # prefix = RESISTOR_PREFIX[int(RESISTOR_COLORS.index(colors[2].lower()) / 3)]
+    # print(f"{prefix=}")
+
+
+
+    # resistance = int(''.join(str(RESISTOR_COLORS.index(color.lower())) for color in colors[:2]))
+
+    # print(f"resistance: {resistance}")
+    # resistance *= 10 ** RESISTOR_COLORS.index(colors[2].lower())
+    # print(f"New resistance: {resistance}")
+
+
+
+    # prefix = RESISTOR_PREFIX[int(RESISTOR_COLORS.index(colors[2].lower()) / 3)]
+
+    # print(f"{prefix=}")
+
+    # print(f"{resistance} {prefix}")
+
+    # return f"{resistance} {prefix}"
+
+
+
+    # if all(color.lower() in RESISTOR_COLORS for color in colors[:3]):
+    #     resistance = int(''.join(str(RESISTOR_COLORS.index(color.lower())) for color in colors[:2]))
+
+    #     #resistance *= 10 ** RESISTOR_COLORS.index(colors[2].lower())
+    #     prefix = RESISTOR_PREFIX[int(RESISTOR_COLORS.index(colors[2].lower()) / 3)]
+    #     return f"{resistance} {prefix}"
+
+    # raise ValueError("Invalid color(s) in the resistor bands.")
 
