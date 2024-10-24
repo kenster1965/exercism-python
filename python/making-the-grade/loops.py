@@ -7,8 +7,10 @@ def round_scores(student_scores):
     :param student_scores: list - float or int of student exam scores.
     :return: list - student scores *rounded* to nearest integer value.
     """
-
-    pass
+    updated_student_scores = []
+    for score in student_scores:
+        updated_student_scores.append(round(score))
+    return updated_student_scores
 
 
 def count_failed_students(student_scores):
@@ -17,19 +19,18 @@ def count_failed_students(student_scores):
     :param student_scores: list - containing int student scores.
     :return: int - count of student scores at or below 40.
     """
-
-    pass
+    return sum(1 for score in student_scores if score <= 40)
 
 
 def above_threshold(student_scores, threshold):
-    """Determine how many of the provided student scores were 'the best' based on the provided threshold.
+    """Determine how many of the provided student scores were 'the best' based
+      on the provided threshold.
 
     :param student_scores: list - of integer scores.
     :param threshold: int - threshold to cross to be the "best" score.
     :return: list - of integer scores that are at or above the "best" threshold.
     """
-
-    pass
+    return [score for score in student_scores if score >= threshold]
 
 
 def letter_grades(highest):
@@ -45,8 +46,8 @@ def letter_grades(highest):
             71 <= "B" <= 85
             86 <= "A" <= 100
     """
-
-    pass
+    each_grade_letter = (highest - 40) / 4
+    return [int(41 + each_grade_letter * index) for index in range(4)]
 
 
 def student_ranking(student_scores, student_names):
@@ -56,15 +57,21 @@ def student_ranking(student_scores, student_names):
     :param student_names: list - of string names by exam score in descending order.
     :return: list - of strings in format ["<rank>. <student name>: <score>"].
     """
-
-    pass
+    return [
+        f"{index + 1}. {name.title()}: {score}"
+        for index, (name, score) in enumerate(zip(student_names, student_scores))
+    ]
 
 
 def perfect_score(student_info):
-    """Create a list that contains the name and grade of the first student to make a perfect score on the exam.
+    """Create a list that contains the name and grade of the first student to
+      make a perfect score on the exam.
 
     :param student_info: list - of [<student name>, <score>] lists.
     :return: list - first `[<student name>, 100]` or `[]` if no student score of 100 is found.
     """
 
-    pass
+    student = next(
+        (student for student in student_info if student[1] == 100), None
+    )
+    return student if student else []
