@@ -20,7 +20,7 @@ def to_rna(dna_strand):
 
     try:
         rna_strand = ''.join(dna_to_rna[nucleotide] for nucleotide in dna_strand)
-    except KeyError:
-        raise ValueError("Invalid DNA sequence")
+    except KeyError as exc:
+        raise ValueError("Invalid DNA sequence") from exc
 
     return rna_strand
