@@ -2,11 +2,18 @@
 Find resistance and tolerance of a resistor from 4 bands.
 """
 
+
 def _report_resistor_prefix(resistance, bands):
+    """
+    Find resistance and tolerance of a resistor with 3 to 5 bands.
+
+    :resistance: float - the resistance value of the resistor
+    :bands: int - the number of bands on the resistor
+    :return: string - the resistance and tolerance of the resistor
+    """
     resistor_prefix = ('', 'kilo', 'mega', 'giga')
     index = 0
-    formatted_resistance = ""
-    print(f"_report_resistor_prefix resistance: {resistance}")
+
     if resistance < 1000:
         return f"{resistance:.0f} ohms"
 
@@ -14,23 +21,12 @@ def _report_resistor_prefix(resistance, bands):
         resistance /= 1000
         index += 1
 
-    if bands == 3:
-        if resistance.is_integer():
-            formatted_resistance = f"{int(resistance)}"
-        else:
-            formatted_resistance = f"{resistance:.0f}"
-    elif bands == 4:
-        if not resistance.is_integer():
-            formatted_resistance = f"{resistance:.1f}".rstrip('0').rstrip('.')
-        else:
-            formatted_resistance = f"{int(resistance)}"
-
-    elif bands == 5:
-        if not resistance.is_integer():
-            formatted_resistance = f"{resistance:.2f}".rstrip('0').rstrip('.')
-        else:
-            formatted_resistance = f"{int(resistance)}"
-
+    # Format the resistance value. This at first was if number of band ...
+    # this called anothger fundtion to format the resistance value, but I
+    # decided to do it here. Problem is it may be hard to follow the code.
+    if resistance.is_integer():
+        formatted_resistance =  f"{int(resistance)}"
+    formatted_resistance = f"{resistance:.{bands - 3}f}".rstrip('0').rstrip('.')
 
     return f"{formatted_resistance} {resistor_prefix[index]}ohms"
 
@@ -42,9 +38,7 @@ def resistor_label(colors):
     :colors: list of colors of the bands to find resistance and tolerance
     :return: resistance and tolerance of the resistor
     :raises ValueError: If any color is invalid.
-
     """
-
     color_band_values = (
         'black', 'brown', 'red', 'orange', 'yellow',
         'green', 'blue', 'violet', 'grey', 'white'
@@ -58,58 +52,21 @@ def resistor_label(colors):
     if not all(color.lower() in color_band_values for color in colors[:3]):
         raise ValueError("Invalid color(s) in the resistor bands.")
 
-    print(f"colors: {colors}")
-    print(f"len(colors): {len(colors)}")
-
-
     if len(colors) == 1:
         return f"{color_band_values.index(colors[0].lower())} ohms"
 
-    if len(colors) == 4:
-        color_bands = [str(color_band_values.index(color.lower())) for color in colors[:2]]
-        print(f"color_bands: {color_bands}")
-        resistance = int(''.join(color_bands))
-        print(f"resistance: {resistance}")
-        resistance *= 10 ** color_band_values.index(colors[2].lower())
-        print(f"resistance: {resistance}")
-        print(f"Prefix: {_report_resistor_prefix(resistance,4)}")
+    number_bands = len(colors)
+    # Extract color bands and calculate resistance
+    significant_figures = [
+        str(color_band_values.index(color.lower())) for color in colors[:number_bands-2]
+    ]
+    resistance = int(''.join(significant_figures))
+    multiplier = 10 ** color_band_values.index(colors[number_bands-2].lower())
+    resistance *= multiplier
 
-        tolerances_color = colors[3].lower()
-        print(f"color: {tolerances_color}")
-        tolerance = tolerances[tolerances_color]
-        print("toelance: ", tolerance)
-        # print(f"*** 4:  {_report_resistor_prefix(resistance,4)} ±{tolerance}%")
-        return f"{_report_resistor_prefix(resistance,4)} ±{tolerance}%"
+    # Get tolerance value
+    tolerance_color = colors[number_bands-1].lower()
+    tolerance = tolerances[tolerance_color]
 
-
-
-    if len(colors) == 5:
-        color_bands = [str(color_band_values.index(color.lower())) for color in colors[:3]]
-        print(f"color_bands: {color_bands}")
-
-        resistance = int(''.join(color_bands))
-        #print(f"resistance: {resistance}")
-
-        resistance *= 10 ** color_band_values.index(colors[3].lower())
-        #print(f"resistance: {resistance}")
-
-        print(f"Prefix: {_report_resistor_prefix(resistance,5)}")
-
-
-
-        tolerances_color = colors[4].lower()
-        print(f"color: {tolerances_color}")
-
-        tolerance = tolerances[tolerances_color]
-        print("toelance: ", tolerance)
-
-        # print(f"*** 5:  {_report_resistor_prefix(resistance,5)} ±{tolerance}%")
-        return f"{_report_resistor_prefix(resistance,5)} ±{tolerance}%"
-
-
-
-    # return f"{resistance:.1f} {resistor_prefix[index]}ohms"
-
-
-    # print(f"{resistance} {resistor_prefix[-1]}ohms")
-    # return f"{resistance} {resistor_prefix[-1]}ohms"
+    # Format and return the result
+    return f"{_report_resistor_prefix(resistance, number_bands)} ±{tolerance}%"
