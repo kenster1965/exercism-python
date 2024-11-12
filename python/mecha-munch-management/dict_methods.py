@@ -64,17 +64,11 @@ def update_store_inventory(fulfillment_cart, store_inventory):
     :param store_inventory: dict - store available inventory
     :return: dict - store_inventory updated.
     """
-    print(f"** Starting {fulfillment_cart=}")
-    print(f"** Starting {store_inventory=}")
-
-    for item in store_inventory:
+    # Loop the fulfillment_cart and update the store_inventory
+    for item in fulfillment_cart:
         new_inventory = store_inventory[item][0] - fulfillment_cart[item][0]
-        #print(f"{item=}  {new_inventory=}")
+        # Instead of negative inventory, set to 'Out of Stock'
         if new_inventory < 1:
             new_inventory = 'Out of Stock'
-
         store_inventory[item][0] = new_inventory
-
-        #print(f"in loop {store_inventory=}")
-    print(f"Returning  {store_inventory=}")
     return store_inventory
