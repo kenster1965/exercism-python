@@ -48,20 +48,27 @@ def _handle_user_defined_word(input_data, user_defined_words, i):
     return i
 
 
-def _execute_user_defined_word(command, user_defined_words, input_data, i):
+def _execute_user_defined_word(command, user_defined_words, stack):
     """
     Execute a user-defined word.
 
     :param command: The user-defined word to execute
     :param user_defined_words: Dictionary of user-defined words
-    :param input_data: List of commands
-    :param i: Current command index
-    :return: Updated input_data and command index
+    :param stack: The current stack
     """
     word_name = command.upper()
     definition = user_defined_words[word_name]
-    input_data = input_data[:i] + definition + input_data[i + 1:]
-    return input_data, i
+
+    # Process each command in the definition
+    for cmd in definition:
+        if _is_number(cmd):
+            _process_number(cmd, stack)
+        elif cmd.upper() in user_defined_words:
+            _execute_user_defined_word(cmd, user_defined_words, stack)
+        elif cmd.upper() in {"+", "-", "*", "/", "DUP", "DROP", "SWAP", "OVER"}:
+            _perform_operation(cmd, stack)
+        else:
+            raise ValueError("undefined operation")
 
 
 def _perform_operation(command, stack):
@@ -85,7 +92,7 @@ def _perform_operation(command, stack):
             raise StackUnderflowError()
         b, a = stack.pop(), stack.pop()
         if b == 0:
-            raise ZeroDivisionError("Division by zero")
+            raise ZeroDivisionError("divide by zero")
         stack.append(a // b)
     elif command == 'DUP':
         if not stack:
@@ -129,8 +136,7 @@ def evaluate(input_data):
         elif command == ":":
             i = _handle_user_defined_word(input_data, user_defined_words, i)
         elif command.upper() in user_defined_words:
-            input_data, i = _execute_user_defined_word(command, user_defined_words, input_data, i)
-            #continue
+            _execute_user_defined_word(command, user_defined_words, stack)
         elif command.upper() in {"+", "-", "*", "/", "DUP", "DROP", "SWAP", "OVER"}:
             _perform_operation(command, stack)
         else:
