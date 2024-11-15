@@ -1,3 +1,8 @@
+"""
+Evaluator for Forth Stach program.
+"""
+
+
 class StackUnderflowError(Exception):
     """Exception raised when Stack is not full."""
     def __init__(self, message="Insufficient number of items in stack"):
@@ -16,34 +21,33 @@ def _process_number(command, stack):
 
 def _handle_user_defined_word(input_data, user_defined_words, i):
     """
-    Process a user-defined word definition.
+    Save user defined word.
 
     :param input_data: List of commands
     :param user_defined_words: Dictionary to store user-defined words
     :param i: Current command index
-    :return: Updated command index
+    :return: Updated index (i)
     """
     i += 1
-    if i >= len(input_data):
-        raise ValueError("Invalid word name in definition")
 
     word_name = input_data[i]
     if _is_number(word_name):
-        raise ValueError("illegal operation")  # Numbers cannot be word names
+        # names can not be numbers
+        raise ValueError("illegal operation")
 
     word_name = word_name.upper()
 
-    # Collect the definition until ';' is encountered
+    # Loop to the ;
     i += 1
     definition = []
     while i < len(input_data) and input_data[i] != ";":
-        definition.append(input_data[i])
+        command = input_data[i].upper()
+        if command in user_defined_words:
+            definition.append((command, list(user_defined_words[command])))
+        else:
+            definition.append((command, None))
         i += 1
 
-    if i == len(input_data):
-        raise ValueError("Missing ';' in word definition")
-
-    # Store the definition
     user_defined_words[word_name] = definition
     return i
 
@@ -52,20 +56,25 @@ def _execute_user_defined_word(command, user_defined_words, stack):
     """
     Execute a user-defined word.
 
-    :param command: The user-defined word to execute
+    :param command: The user word to execute
     :param user_defined_words: Dictionary of user-defined words
     :param stack: The current stack
     """
     word_name = command.upper()
     definition = user_defined_words[word_name]
 
-    # Process each command in the definition
-    for cmd in definition:
+    for cmd, snapshot in definition:
         if _is_number(cmd):
             _process_number(cmd, stack)
-        elif cmd.upper() in user_defined_words:
-            _execute_user_defined_word(cmd, user_defined_words, stack)
-        elif cmd.upper() in {"+", "-", "*", "/", "DUP", "DROP", "SWAP", "OVER"}:
+        elif snapshot is not None:
+            for sub_cmd, sub_snapshot in snapshot:
+                if _is_number(sub_cmd):
+                    _process_number(sub_cmd, stack)
+                elif sub_snapshot is not None:
+                    _execute_user_defined_word(sub_cmd, {sub_cmd: sub_snapshot}, stack)
+                else:
+                    _perform_operation(sub_cmd, stack)
+        elif cmd in {"+", "-", "*", "/", "DUP", "DROP", "SWAP", "OVER"}:
             _perform_operation(cmd, stack)
         else:
             raise ValueError("undefined operation")
@@ -116,12 +125,10 @@ def _perform_operation(command, stack):
 
 def evaluate(input_data):
     """
-    Interpret a list of strings as Forth commands and return the stack as integers.
+    Take list of strings as Forth commands and return the stack as integers.
 
-    Supports basic arithmetic operations, stack manipulation, and defining new words.
-
-    :param input_data: List of strings (commands or numbers)
-    :return: List of integers representing the stack after execution
+    :param input_data: List of strings
+    :return: List of integers of the stack
     """
     stack = []
     user_defined_words = {}
