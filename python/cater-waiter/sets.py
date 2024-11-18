@@ -20,23 +20,24 @@ def clean_ingredients(dish_name, dish_ingredients):
     This function should return a `tuple` with the name of the dish as the first item,
     followed by the de-duped `set` of ingredients as the second item.
     """
-
-    pass
+    return dish_name, set(dish_ingredients)
 
 
 def check_drinks(drink_name, drink_ingredients):
-    """Append "Cocktail" (alcohol)  or "Mocktail" (no alcohol) to `drink_name`, based on `drink_ingredients`.
+    """Append "Cocktail" (alcohol)  or "Mocktail" (no alcohol) to `drink_name`, based
+    on `drink_ingredients`.
 
     :param drink_name: str - name of the drink.
     :param drink_ingredients: list - ingredients in the drink.
     :return: str - drink_name appended with "Mocktail" or "Cocktail".
 
-    The function should return the name of the drink followed by "Mocktail" (non-alcoholic) and drink
+    The function should return the name of the drink followed by "Mocktail"
+    (non-alcoholic) and drink
     name followed by "Cocktail" (includes alcohol).
 
     """
-
-    pass
+    alcoholic = any(item in ALCOHOLS for item in drink_ingredients)
+    return f"{drink_name} {'Cocktail' if alcoholic else 'Mocktail'}"
 
 
 def categorize_dish(dish_name, dish_ingredients):
@@ -46,13 +47,27 @@ def categorize_dish(dish_name, dish_ingredients):
     :param dish_ingredients: set - ingredients for the dish.
     :return: str - the dish name appended with ": <CATEGORY>".
 
-    This function should return a string with the `dish name: <CATEGORY>` (which meal category the dish belongs to).
+    This function should return a string with the `dish name: <CATEGORY>`
+    (which meal category the dish belongs to).
     `<CATEGORY>` can be any one of  (VEGAN, VEGETARIAN, PALEO, KETO, or OMNIVORE).
     All dishes will "fit" into one of the categories imported from `sets_categories_data.py`
 
     """
-
-    pass
+    categories = {
+        "VEGAN": VEGAN,
+        "VEGETARIAN": VEGETARIAN,
+        "PALEO": PALEO,
+        "KETO": KETO,
+        "OMNIVORE": OMNIVORE,
+    }
+    max_matches = 0
+    matching_category = ""
+    for name, category_ingredients in categories.items():
+        match_count = len(dish_ingredients & category_ingredients)
+        if match_count > max_matches:
+            max_matches = match_count
+            matching_category = name
+    return f"{dish_name}: {matching_category}"
 
 
 def tag_special_ingredients(dish):
@@ -61,12 +76,13 @@ def tag_special_ingredients(dish):
     :param dish: tuple - of (dish name, list of dish ingredients).
     :return: tuple - containing (dish name, dish special ingredients).
 
-    Return the dish name followed by the `set` of ingredients that require a special note on the dish description.
-    For the purposes of this exercise, all allergens or special ingredients that need to be tracked are in the
+    Return the dish name followed by the `set` of ingredients that require a special
+    note on the dish description.
+    For the purposes of this exercise, all allergens or special ingredients that
+    need to be tracked are in the
     SPECIAL_INGREDIENTS constant imported from `sets_categories_data.py`.
     """
-
-    pass
+    return dish[0], set(dish[1]) & SPECIAL_INGREDIENTS
 
 
 def compile_ingredients(dishes):
@@ -77,8 +93,10 @@ def compile_ingredients(dishes):
 
     This function should return a `set` of all ingredients from all listed dishes.
     """
-
-    pass
+    all_ingredients = set()
+    for dish in dishes:
+        all_ingredients.update(set(dish))
+    return all_ingredients
 
 
 def separate_appetizers(dishes, appetizers):
@@ -91,23 +109,27 @@ def separate_appetizers(dishes, appetizers):
     The function should return the list of dish names with appetizer names removed.
     Either list could contain duplicates and may require de-duping.
     """
-
-    pass
+    return list(set(dishes) - set(appetizers))
 
 
 def singleton_ingredients(dishes, intersection):
-    """Determine which `dishes` have a singleton ingredient (an ingredient that only appears once across dishes).
+    """Determine which `dishes` have a singleton ingredient (an ingredient that
+    only appears once across dishes).
 
     :param dishes: list - of ingredient sets.
-    :param intersection: constant - can be one of `<CATEGORY>_INTERSECTIONS` constants imported from `sets_categories_data.py`.
+    :param intersection: constant - can be one of `<CATEGORY>_INTERSECTIONS` constants
+    imported from `sets_categories_data.py`.
     :return: set - containing singleton ingredients.
 
     Each dish is represented by a `set` of its ingredients.
 
-    Each `<CATEGORY>_INTERSECTIONS` is an `intersection` of all dishes in the category. `<CATEGORY>` can be any one of:
+    Each `<CATEGORY>_INTERSECTIONS` is an `intersection` of all dishes in the
+    category. `<CATEGORY>` can be any one of:
         (VEGAN, VEGETARIAN, PALEO, KETO, or OMNIVORE).
 
     The function should return a `set` of ingredients that only appear in a single dish.
     """
-
-    pass
+    all_ingredients = set()
+    for dish in dishes:
+        all_ingredients.update(set(dish))
+    return all_ingredients - intersection
