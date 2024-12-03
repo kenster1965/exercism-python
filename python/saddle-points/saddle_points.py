@@ -19,8 +19,13 @@ def saddle_points(matrix):
         raise ValueError("irregular matrix")
 
     max_rows = [max(row) for row in matrix]
-    min_columns = [min([matrix[row][col] for row in range(len(matrix))]) for col in range(len(matrix[0]))]
-
+    min_columns = [
+        min(
+            matrix[row][col]
+            for row in range(len(matrix))
+        )
+        for col in range(len(matrix[0]))
+    ]
     list_saddle_points = [
         {"row": row + 1, "column": col + 1}
         for row in range(len(matrix))

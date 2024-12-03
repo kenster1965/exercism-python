@@ -46,5 +46,6 @@ def answer(question):
     expression = ' '.join(tokens)
 
     # evaluate the question
-    the_answer = eval(expression)
+    #the_answer = eval(expression)
+    the_answer = expression
     return the_answer
