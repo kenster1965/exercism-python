@@ -1,3 +1,4 @@
+"""Robot Simulator"""
 # Globals for the directions
 # Change the values as you see fit
 EAST = 'E'
@@ -6,6 +7,7 @@ WEST = 'W'
 SOUTH = 'S'
 
 class Robot:
+    """Robot Simulator"""
     DIRECTIONS = ['N', 'E', 'S', 'W']
 
 
@@ -17,6 +19,7 @@ class Robot:
         self.y = y
 
     def move(self, moves: str):
+        """Move the per the moves"""
         for move in moves:
             if move == 'R':
                 self._turn_right()
@@ -29,6 +32,7 @@ class Robot:
 
     @property
     def coordinates(self):
+        """Return the current coordinates"""
         return self.x, self.y
 
     def _turn_right(self):
@@ -43,11 +47,11 @@ class Robot:
 
     def _advance(self):
         # Move forward in the current direction
-        if self.direction == 'NORTH':
+        if self.direction == 'N':
             self.y += 1
-        elif self.direction == 'SOUTH':
+        elif self.direction == 'S':
             self.y -= 1
-        elif self.direction == 'EAST':
+        elif self.direction == 'E':
             self.x += 1
-        elif self.direction == 'WEST':
+        elif self.direction == 'W':
             self.x -= 1
