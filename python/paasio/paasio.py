@@ -1,5 +1,7 @@
 import io
-
+import socket
+import errno
+import os
 
 class MeteredFile(io.BufferedRandom):
     """Implement using a subclassing model."""
@@ -43,35 +45,29 @@ class MeteredFile(io.BufferedRandom):
 
 
 class MeteredSocket:
-    """Implement using a delegation model."""
-
     def __init__(self, socket):
-        pass
+        self._socket = socket
+        self._closed = False
+        self.recv_ops = 0
+        self.recv_bytes = 0
 
     def __enter__(self):
-        pass
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+        self._closed = True
+        # Call the wrapped socket's __exit__ method
+        return self._socket.__exit__(exc_type, exc_val, exc_tb)
 
-    def recv(self, bufsize, flags=0):
-        pass
+    def recv(self, bufsize):
+        if self._closed:
+            raise OSError(errno.EBADF, os.strerror(errno.EBADF))
+        data = self._socket.recv(bufsize)
+        self.recv_ops += 1
+        self.recv_bytes += len(data)
+        return data
 
-    @property
-    def recv_bytes(self):
-        pass
-
-    @property
-    def recv_ops(self):
-        pass
-
-    def send(self, data, flags=0):
-        pass
-
-    @property
-    def send_bytes(self):
-        pass
-
-    @property
-    def send_ops(self):
-        pass
+    def send(self, data):
+        if self._closed:
+            raise OSError(errno.EBADF, os.strerror(errno.EBADF))
+        return self._socket.send(data)
