@@ -1,4 +1,5 @@
 """Functions to automate Conda airlines ticketing system."""
+from itertools import cycle
 
 
 def generate_seat_letters(number):
@@ -11,10 +12,13 @@ def generate_seat_letters(number):
     After D it should start again with A.
 
     Example: A, B, C, D
-
     """
-
-    pass
+    counter = 0
+    for letter in cycle('ABCD'):
+        if counter >= number:
+            break
+        yield letter
+        counter += 1
 
 
 def generate_seats(number):
@@ -31,10 +35,15 @@ def generate_seats(number):
     Seats should be sorted from low to high.
 
     Example: 3C, 3D, 4A, 4B
-
     """
+    row = 1
+    for seat_letter in generate_seat_letters(number):
+        yield f"{row}{seat_letter}"
+        if seat_letter == "D":
+            row += 1
+        if row == 13:
+            row += 1
 
-    pass
 
 def assign_seats(passengers):
     """Assign seats to passengers.
@@ -43,10 +52,10 @@ def assign_seats(passengers):
     :return: dict - with the names of the passengers as keys and seat numbers as values.
 
     Example output: {"Adele": "1A", "Björk": "1B"}
-
     """
+    seats = generate_seats(len(passengers))
+    return {passenger: next(seats) for passenger in passengers}
 
-    pass
 
 def generate_codes(seat_numbers, flight_id):
     """Generate codes for a ticket.
@@ -54,7 +63,8 @@ def generate_codes(seat_numbers, flight_id):
     :param seat_numbers: list[str] - list of seat numbers.
     :param flight_id: str - string containing the flight identifier.
     :return: generator - generator that yields 12 character long ticket codes.
-
     """
+    seat_numbers = iter(seat_numbers)
 
-    pass
+    for seat in seat_numbers:
+        yield f"{seat}{flight_id}".ljust(12, '0')
