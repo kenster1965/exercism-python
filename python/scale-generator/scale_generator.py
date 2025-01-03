@@ -1,3 +1,4 @@
+"""Scale Generator"""
 class Scale:
     """
     Scale class
@@ -10,26 +11,24 @@ class Scale:
         "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"
     ]
 
-    INTERVAL_MAP = {"M": 2, "m": 1, "A": 3}  # Major (2 semitones), Minor (1 semitone), Augmented (3 semitones)
+    # Major (2 semitones), Minor (1 semitone), Augmented (3 semitones)
+    INTERVAL_MAP = {"M": 2, "m": 1, "A": 3}
 
-    def __init__(self, tonic, scale_type="ascending"):
+    def __init__(self, tonic):
         """
         Constructor
 
-        Args:
-        tonic (str): The starting note of the scale.
-        scale_type (str): Either "ascending" or "descending".
+        Args: tonic (str) - The starting note of the scale.
         """
-        # Normalize the tonic to have the first letter capitalized
-        self.tonic = tonic[0].upper() + tonic[1:] if len(tonic) > 1 else tonic.upper()
-        self.scale_type = scale_type.lower()
+        # Keep the case of the tonic so we know the if its major and minor
+        self.tonic = tonic
+
 
     def determine_scale(self):
         """
         Determines whether to use the sharp or flat chromatic scale.
 
-        Returns:
-        list: The selected chromatic scale.
+        Return: list - The selected chromatic scale.
         """
         sharp_major = {"G", "D", "A", "E", "B", "F#"}
         sharp_minor = {"e", "b", "f#", "c#", "g#", "d#"}
@@ -41,11 +40,7 @@ class Scale:
         elif self.tonic in flat_major or self.tonic in flat_minor:
             return self.CHROMATIC_NOTES_FLAT
         elif self.tonic in {"C", "a"}:
-            return (
-                self.CHROMATIC_NOTES_SHARP
-                if self.scale_type == "ascending"
-                else self.CHROMATIC_NOTES_FLAT
-            )
+            return self.CHROMATIC_NOTES_SHARP  # Use sharps for C and a as specified
         else:
             raise ValueError(f"{self.tonic} is not a valid note.")
 
@@ -53,30 +48,27 @@ class Scale:
         """
         Chromatic
 
-        Returns:
-        list: The chromatic scale starting with the tonic.
+        Returns: list - The chromatic scale starting with the tonic.
         """
         notes = self.determine_scale()
 
         # Generate the scale starting with the tonic
-        start_index = notes.index(self.tonic)
+        start_index = notes.index(self.tonic.capitalize())
         return notes[start_index:] + notes[:start_index]
 
     def interval(self, intervals):
         """
         Interval
 
-        Args:
-        intervals (str): The intervals of the scale (e.g., "MMmMMMm").
+        Args: intervals (str) - The intervals of the scale.
 
-        Returns:
-        list: The scale with the specified intervals.
+        Returns: list- The scale with the intervals.
         """
         # Get the chromatic scale for the given tonic
         chromatic_scale = self.chromatic()
 
         # Start building the scale from the tonic
-        scale = [self.tonic]
+        scale = [self.tonic.capitalize()]
         current_index = 0
 
         for interval in intervals:
@@ -90,5 +82,3 @@ class Scale:
             scale.append(chromatic_scale[current_index])
 
         return scale
-
-
